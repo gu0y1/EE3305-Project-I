@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!--
+	EE3305/ME3243
+	Name: Chen Guoyi (guoyi@comp.nus.edu.sg)
+	Matric number: A0262311W
+-->
+
+<launch>
+
+	<!-- Launch the world in Gazebo. -->
+	<arg name="student_pkg_path" value="$(find a311w_pid)"/>
+	<arg name="world_name" default="$(arg student_pkg_path)/worlds/singlepillar.world"/>
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(arg world_name)"/>
+	</include>
+
+	<!-- Node Tag -->
+	<node pkg="a311w_pid" type="a311w_pid" name="pid_control_node" output="screen"/>
+
+	<!-- Tune the PID control from config.yaml -->
+	<rosparam command="load" file="$(arg student_pkg_path)/config/config.yaml"/>
+	
+	<!-- Spawn Husky in Gazebo. -->
+	<include file="$(arg student_pkg_path)/launch/spawn_husky.launch">
+	<arg name="x" default="0"/>
+	<arg name="y" default="0"/>
+	<arg name="z" default="0"/>
+	<arg name="yaw" default="0"/>
+	<arg name="ee3305_urdf" value="$(arg student_pkg_path)/urdf/husky.urdf.xacro"/>
+	<arg name="ee3305_mass" value="410"/>
+	</include>
+
+</launch>
